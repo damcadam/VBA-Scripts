@@ -1,0 +1,10 @@
+' Function: Since there is no built in way to clear ouput in the immediate window
+'   printing some new lines will psuedo clear it
+Private Sub ClearImmediateWindow()
+
+    Dim i As Long
+    For i = 0 To 100
+        Debug.Print ("")
+    Next i
+    
+End Sub

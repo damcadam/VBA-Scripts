@@ -1,0 +1,37 @@
+' Class: A class to group data for chart formatting. Grouping the data this way
+'   is easier to use and change than using a big array with all the columns
+
+Option Explicit
+
+' All formating variables here
+' These can all be strings here and we can worry about them casting right later
+Public PointToUse As String
+Public ChartTitle As String
+Public SubTitle As String
+Public LineLegendName As String
+Public YAxisTitle As String
+Public LowLimit As String
+Public HighLimit As String
+Public Average As String
+Public OtherConstantValue As String
+Public OtherConstantName As String
+Public MaxYValue As String
+Public MinYValue As String
+
+' Constructor: Gives us control over the default values when we create a class.
+'   We can also do other logic here like error handling values from Excel
+Private Sub Class_Initialize()
+    PointToUse = ""
+    ChartTitle = ""
+    SubTitle = ""
+    LineLegendName = ""
+    YAxisTitle = ""
+    LowLimit = ""
+    HighLimit = ""
+    Average = ""
+    OtherConstantValue = ""
+    OtherConstantName = ""
+    MaxYValue = ""
+    MinYValue = ""
+End Sub
+

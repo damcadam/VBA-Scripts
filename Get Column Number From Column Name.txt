@@ -1,0 +1,24 @@
+
+' Function: Gets the excel column number from the name of the letters
+' colName: Name of the column A, B, AC, etc.
+' Returns: Column number 1 for A, 2 for B, etc.
+Function GetColNumberFromName(colName As String) As Long
+
+    Dim colNumber As Long
+    colNumber = 0
+
+    ' Loop thru name in reverse and add up letter values
+    ' Letters will be based on ASCII uppercase letters
+    ' Excel columns pretty much act like base 26 numbers
+    colName = UCase(colName)
+    Debug.Print colName
+    Dim i As Long
+    Dim power As Long
+    power = 0
+    For i = Len(colName) To 1 Step -1
+    
+        colNumber = colNumber + (Asc(Mid(colName, i, 1)) - 64) * 26 ^ (power)
+        power = power + 1
+    Next i
+
+End Function

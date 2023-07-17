@@ -1,0 +1,101 @@
+' Program: Save all attachments into a new folder in the downloads folder
+' Author: Darius McAdam
+' Written: June 2023
+
+' Libraries:
+' Microsoft Scripting Runtime
+
+Option Explicit
+
+' Function: Control flow of the progom
+Public Sub Main()
+
+    ' Get the email object from selected email
+    Dim selectedEmail As Outlook.MailItem
+    Set selectedEmail = GetSelectedEmail
+    
+    ' Exit if the email did not get stored in the object right
+    If IsNull(selectedEmail) Then
+        Debug.Print "Email not selected, obj is null"
+        End
+    End If
+    
+    ' Exit if there are no attachements to save
+    If selectedEmail.Attachments.Count = 0 Then
+        Debug.Print "There are no attchements in this email"
+        End
+    End If
+    
+    ' Create the folder to save attachments in
+    Dim folderName As String
+    folderName = CreateAttachmentsFolder(selectedEmail)
+    
+    ' Save each attachment in the folder
+    SaveAttachments selectedEmail, folderName
+
+    Debug.Print "complete"
+    
+End Sub
+
+' Function: Create the folder that attachements get saved in the email
+' selectedEmail: current email selected in outlook
+' Returns: path of the folder that holds all attachments
+Private Function CreateAttachmentsFolder(selectedEmail As Outlook.MailItem) As String
+
+    ' Create a path for the folder
+    Dim downloadsPath As String
+    downloadsPath = "C:\Users\dmcadam\Downloads\" ' <-- Hard coded in to what you want
+    Dim folderNameBase As String, folderName As String
+    folderNameBase = downloadsPath & selectedEmail.TaskSubject
+    folderName = folderNameBase
+    
+    ' To prevent duplicate folder name errors
+    Dim nameSuffix As Long
+    nameSuffix = 1
+    While Dir(folderName & "\") <> ""
+        folderName = folderNameBase & " " & nameSuffix
+        nameSuffix = nameSuffix + 1
+    Wend
+    
+    ' Create the folder
+    MkDir (folderName)
+    ' Return so we can use it when saving attachments
+    CreateAttachmentsFolder = folderName
+
+End Function
+
+' Function: Get the selected email in outlook
+' Returns: VBA object for the selected email
+Private Function GetSelectedEmail() As Outlook.MailItem
+
+    Dim currentMail As Outlook.MailItem
+    Dim currentSelection As Outlook.Selection
+    Set currentSelection = Application.ActiveExplorer.Selection
+    
+    ' Make sure something is selected
+    If currentSelection.Count > 0 Then
+        ' Check if the first selected item is an email
+        If TypeOf currentSelection.Item(1) Is Outlook.MailItem Then
+            Set currentMail = currentSelection.Item(1)
+        End If
+    End If
+    
+    Set GetSelectedEmail = currentMail
+
+End Function
+
+' Function: Save each attachment in the email
+' selectedEmail: current email selected in outlook
+' folderName: path of the folder that holds all attachments
+Private Sub SaveAttachments(selectedEmail As Outlook.MailItem, folderName As String)
+    
+    Dim Attachment As Attachment
+    Dim savePath As String
+    
+    ' Save each attachment in the email
+    For Each Attachment In selectedEmail.Attachments
+        savePath = folderName & "\" & Attachment.FileName
+        Attachment.SaveAsFile savePath
+    Next Attachment
+    
+End Sub
